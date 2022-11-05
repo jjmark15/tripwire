@@ -14,12 +14,12 @@ pub(super) async fn echo(
     uri: Uri,
     version: Version,
 ) -> impl IntoResponse {
-    let echo = json!(EchoBody::new(body, headers, method, params, uri, version));
+    let echo = EchoBody::new(body, headers, method, params, uri, version);
     tracing::debug!("echo response body: {echo:#?}");
-    (StatusCode::OK, Json(echo))
+    (StatusCode::OK, Json(json!((echo))))
 }
 
-#[derive(serde::Serialize)]
+#[derive(serde::Serialize, Debug)]
 struct EchoBody {
     body: String,
     headers: HashMap<String, String>,
