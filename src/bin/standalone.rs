@@ -24,6 +24,5 @@ async fn main() {
 
 fn get_log_levels() -> String {
     let from_env = std::env::var("TRIPWIRE_LOG").unwrap_or_else(|_| "".to_string());
-
-    format!("standalone=info,tripwire=info,tower_http=warn,{}", from_env)
+    format!("info,{from_env}")
 }
