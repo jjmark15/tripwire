@@ -15,7 +15,7 @@ pub(super) async fn echo(
     version: Version,
 ) -> impl IntoResponse {
     let echo = json!(EchoBody::new(body, headers, method, params, uri, version));
-    tracing::debug!("{echo:#?}");
+    tracing::debug!("echo response body: {echo:#?}");
     (StatusCode::OK, Json(echo))
 }
 

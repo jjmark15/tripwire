@@ -17,6 +17,7 @@ pub(crate) fn axum_server() -> Router {
 }
 
 fn add_signature(mut response: Response) -> Response {
+    tracing::debug!("adding signature headers to response");
     response
         .headers_mut()
         .insert("wizard", HeaderValue::from_str("ClumsyWizard").unwrap());
