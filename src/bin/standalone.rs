@@ -8,10 +8,7 @@ use tripwire::app;
 #[tokio::main(worker_threads = 1)]
 async fn main() {
     tracing_subscriber::registry()
-        .with(tracing_subscriber::EnvFilter::new(
-            std::env::var("TRIPWIRE_LOG")
-                .unwrap_or_else(|_| "standalone=info,tower_http=warn".into()),
-        ))
+        .with(tracing_subscriber::EnvFilter::new(get_log_levels()))
         .with(tracing_subscriber::fmt::layer())
         .init();
 
@@ -23,4 +20,10 @@ async fn main() {
         .serve(app().into_make_service())
         .await
         .unwrap();
+}
+
+fn get_log_levels() -> String {
+    let from_env = std::env::var("TRIPWIRE_LOG").unwrap_or_else(|_| "".to_string());
+
+    format!("standalone=info,tripwire=info,tower_http=warn,{}", from_env)
 }
