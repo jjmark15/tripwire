@@ -14,12 +14,9 @@ pub(super) async fn echo(
     uri: Uri,
     version: Version,
 ) -> impl IntoResponse {
-    (
-        StatusCode::OK,
-        Json(json!(EchoBody::new(
-            body, headers, method, params, uri, version
-        ))),
-    )
+    let echo = json!(EchoBody::new(body, headers, method, params, uri, version));
+    tracing::debug!("{echo:#?}");
+    (StatusCode::OK, Json(echo))
 }
 
 #[derive(serde::Serialize)]
@@ -50,7 +47,7 @@ impl EchoBody {
             method: method.to_string(),
             params,
             uri: uri.to_string(),
-            version: format!("{:?}", version),
+            version: format!("{version:?}"),
         }
     }
 }
