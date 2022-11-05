@@ -514,6 +514,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "standalone"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "tripwire",
+]
+
+[[package]]
 name = "syn"
 version = "1.0.103"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -688,11 +699,9 @@ dependencies = [
  "axum",
  "serde",
  "serde_json",
- "tokio",
  "tower",
  "tower-http",
  "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]
