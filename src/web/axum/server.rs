@@ -3,6 +3,7 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::{any, get};
 use axum::Router;
 use tower::ServiceBuilder;
+use tower_http::trace::TraceLayer;
 
 use crate::web::axum::echo::echo;
 
@@ -12,6 +13,7 @@ pub(crate) fn axum_server() -> Router {
         .route("/echo/*path", any(echo))
         .route("/echo", any(echo))
         .layer(ServiceBuilder::new().map_response(add_signature))
+        .layer(TraceLayer::new_for_http())
 }
 
 fn add_signature(mut response: Response) -> Response {
