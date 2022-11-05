@@ -42,6 +42,7 @@ impl EchoBody {
             body,
             headers: headers
                 .iter()
+                .filter(|(key, _)| key.as_str() != "tripwire-request-id")
                 .map(|(key, val)| (key.to_string(), val.to_str().unwrap().to_string()))
                 .collect(),
             method: method.to_string(),
