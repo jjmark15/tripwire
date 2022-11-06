@@ -21,6 +21,7 @@ pub(super) async fn echo(
 
 #[derive(serde::Serialize, Debug)]
 struct EchoBody {
+    #[serde(skip_serializing_if = "String::is_empty")]
     body: String,
     headers: HashMap<String, String>,
     method: String,
