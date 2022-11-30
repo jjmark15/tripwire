@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use axum::http::{HeaderValue, Request, StatusCode};
-use axum::response::{IntoResponse, Response};
+use axum::http::{HeaderValue, Request};
+use axum::response::Response;
 use axum::routing::{any, get};
 use axum::Router;
 use tokio::sync::RwLock;
@@ -16,7 +16,6 @@ pub(crate) fn axum_server(trip_state: TripState) -> Router {
     let shared_trip_state = Arc::new(RwLock::new(trip_state));
 
     Router::new()
-        .route("/", get(hi))
         .route("/echo/*path", any(echo))
         .route("/echo", any(echo))
         .route("/trip/*path", any(trip))
@@ -49,8 +48,4 @@ fn add_request_id<T>(mut req: Request<T>) -> Request<T> {
         HeaderValue::from_str(id.as_str()).unwrap(),
     );
     req
-}
-
-async fn hi() -> impl IntoResponse {
-    (StatusCode::OK, "hi")
 }
