@@ -11,6 +11,7 @@ use tokio::sync::RwLock;
 
 use crate::trip_event::{TripEvent, TripHttpRequest};
 use crate::trip_state::TripState;
+use crate::web::axum::REQUEST_ID_HEADER;
 
 type SharedTripState = Arc<RwLock<TripState>>;
 
@@ -25,7 +26,7 @@ pub(crate) async fn trip(
     body: String,
 ) -> impl IntoResponse {
     let request_id = headers
-        .get("tripwire-request-id")
+        .get(REQUEST_ID_HEADER)
         .map(|val| val.to_str().unwrap())
         .unwrap_or("")
         .to_string();
@@ -52,7 +53,7 @@ fn to_trip_http_request(
         body,
         headers
             .iter()
-            .filter(|(key, _)| key.as_str() != "tripwire-request-id")
+            .filter(|(key, _)| key.as_str() != REQUEST_ID_HEADER)
             .map(|(key, val)| (key.to_string(), val.to_str().unwrap().to_string()))
             .collect(),
         method.to_string(),

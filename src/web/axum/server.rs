@@ -11,6 +11,7 @@ use tower_http::trace::TraceLayer;
 use crate::trip_state::TripState;
 use crate::web::axum::echo::echo;
 use crate::web::axum::trip::{trip, trip_history};
+use crate::web::axum::REQUEST_ID_HEADER;
 
 pub(crate) fn axum_server(trip_state: TripState) -> Router {
     let shared_trip_state = Arc::new(RwLock::new(trip_state));
@@ -44,7 +45,7 @@ fn add_signature(mut response: Response) -> Response {
 fn add_request_id<T>(mut req: Request<T>) -> Request<T> {
     let id = format!("tid-{}", ulid::Ulid::new().to_string());
     req.headers_mut().insert(
-        "tripwire-request-id",
+        REQUEST_ID_HEADER,
         HeaderValue::from_str(id.as_str()).unwrap(),
     );
     req
