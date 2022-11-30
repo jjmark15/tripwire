@@ -1,6 +1,7 @@
 use std::collections::HashMap;
+use std::net::SocketAddr;
 
-use axum::extract::Query;
+use axum::extract::{ConnectInfo, Query};
 use axum::http::{HeaderMap, Method, StatusCode, Uri, Version};
 use axum::response::IntoResponse;
 use axum::Json;
@@ -10,11 +11,12 @@ pub(super) async fn echo(
     headers: HeaderMap,
     method: Method,
     Query(params): Query<HashMap<String, String>>,
+    ConnectInfo(remote_address): ConnectInfo<SocketAddr>,
     uri: Uri,
     version: Version,
     body: String,
 ) -> impl IntoResponse {
-    let echo = EchoBody::new(body, headers, method, params, uri, version);
+    let echo = EchoBody::new(body, headers, method, params, remote_address, uri, version);
     tracing::debug!("echo response body: {echo:#?}");
     (StatusCode::OK, Json(json!((echo))))
 }
@@ -26,6 +28,7 @@ struct EchoBody {
     headers: HashMap<String, String>,
     method: String,
     params: HashMap<String, String>,
+    remote_address: String,
     uri: String,
     version: String,
 }
@@ -36,6 +39,7 @@ impl EchoBody {
         headers: HeaderMap,
         method: Method,
         params: HashMap<String, String>,
+        remote_address: SocketAddr,
         uri: Uri,
         version: Version,
     ) -> Self {
@@ -48,6 +52,7 @@ impl EchoBody {
                 .collect(),
             method: method.to_string(),
             params,
+            remote_address: remote_address.to_string(),
             uri: uri.to_string(),
             version: format!("{version:?}"),
         }
