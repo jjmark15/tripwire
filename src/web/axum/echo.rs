@@ -7,12 +7,12 @@ use axum::Json;
 use serde_json::json;
 
 pub(super) async fn echo(
-    body: String,
     headers: HeaderMap,
     method: Method,
     Query(params): Query<HashMap<String, String>>,
     uri: Uri,
     version: Version,
+    body: String,
 ) -> impl IntoResponse {
     let echo = EchoBody::new(body, headers, method, params, uri, version);
     tracing::debug!("echo response body: {echo:#?}");
